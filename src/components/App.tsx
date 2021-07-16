@@ -1,9 +1,9 @@
-import React, {useCallback, useState} from 'react';
+import {useCallback, useState} from 'react';
 import Navbar from './Navbar';
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState } from 'draft-js';
+import { EditorState, convertToRaw } from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { convertToHTML } from 'draft-convert';
+import draftToHtml from 'draftjs-to-html';
 import DOMPurify from 'dompurify';
 
 
@@ -11,15 +11,13 @@ const App = () => {
   const [editorState, setEditorState] = useState(
     () => EditorState.createEmpty(),
   );
-  const  [convertedContent, setConvertedContent] = useState(null);
 
-  const handleEditorChange = (state) => {
-    setEditorState(state);
-    convertContentToHTML();
-  }
-  const convertContentToHTML = () => {
-    let currentContentAsHTML = convertToHTML(editorState.getCurrentContent());
-    setConvertedContent(currentContentAsHTML);
+  const  [finalContent, setFinalContent] = useState(null);
+
+  const handleSubmit = () => {
+    let finalContentAsHTML = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    setFinalContent(finalContentAsHTML);
+    setEditorState("");
   }
 
   const createMarkup = (html) => {
@@ -35,18 +33,23 @@ const App = () => {
     <div>
       <Navbar items={['item1','item2']} onClick={onListClick}/>
 App Component
-<div style={{ border: "1px solid black", padding: '2px', minHeight: '400px' }}>
+      <div style={{ border: "1px solid black", padding: '2px', minHeight: '400px' }}>
         <Editor
           editorState={editorState}
-          onEditorStateChange={handleEditorChange}
+          onEditorStateChange={setEditorState}
           wrapperClassName="wrapper-class"
         editorClassName="editor-class"
         toolbarClassName="toolbar-class"
         />
       </div>
-      <div className="preview" dangerouslySetInnerHTML={createMarkup(convertedContent)}></div>
 
-      </div>
+      <button onClick={handleSubmit}>
+      Submit Post
+      </button>
+
+      <div className="final" dangerouslySetInnerHTML={createMarkup(finalContent)}></div>
+
+    </div>
 
   );
 }

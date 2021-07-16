@@ -16,6 +16,7 @@
     "dotenv": "^6.2.0",
     "draft-convert": "^2.1.11",
     "draft-js": "^0.11.7",
+    "draftjs-to-html": "^0.9.1",
     "express": "^4.17.1",
     "express-session": "^1.15.6",
     "react": "^17.0.2",
