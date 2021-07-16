@@ -1,10 +1,12 @@
 import React from 'react';
+import PostEditor from './PostEditor';
 
 
 function App() {
   return (
     <div className="App">
-hello world
+App Component
+<PostEditor/>
     </div>
   );
 }
